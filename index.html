@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Elite Football Predictor uses football analytics, xG, tactical analysis, squad news, and market intelligence to estimate high-probability match outcomes." />
+  <meta name="keywords" content="football predictor, xg analysis, football tips, match prediction, betting analysis, tactical analysis" />
+  <meta name="author" content="Nyasha" />
+  <meta property="og:title" content="Elite Football Predictor" />
+  <meta property="og:description" content="Advanced football prediction engine built with statistical weighting, tactical analysis, and market intelligence." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#173b8c" />
   <title>Elite Football Predictor | AI Football Prediction Engine</title>
   <style>
     :root {
       --bg: #f4f7fb;
-      --panel: rgba(255, 255, 255, 0.92);
+      --panel: rgba(255, 255, 255, 0.94);
       --panel-strong: #ffffff;
       --text: #152033;
       --muted: #5e6b82;
@@ -21,6 +28,7 @@
     }
 
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -30,7 +38,10 @@
         radial-gradient(circle at top right, rgba(15, 157, 122, 0.12), transparent 28%),
         linear-gradient(180deg, #eef3fb 0%, #f8fbff 100%);
       min-height: 100vh;
+      line-height: 1.55;
     }
+
+    a { color: var(--accent); }
 
     .wrap {
       width: min(1200px, calc(100% - 24px));
@@ -58,15 +69,27 @@
 
     .hero h1 {
       margin: 0 0 8px;
-      font-size: clamp(1.55rem, 3vw, 2.6rem);
+      font-size: clamp(1.7rem, 3vw, 2.8rem);
       letter-spacing: 0.2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero .motto {
+      margin: 12px 0 0;
+      font-weight: 800;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.95);
+      position: relative;
+      z-index: 1;
     }
 
     .hero p {
-      margin: 0;
-      color: rgba(255,255,255,0.88);
-      max-width: 820px;
-      line-height: 1.55;
+      margin: 10px 0 0;
+      color: rgba(255,255,255,0.9);
+      max-width: 850px;
+      position: relative;
+      z-index: 1;
     }
 
     .badge-row {
@@ -86,6 +109,27 @@
       padding: 8px 12px;
       font-size: 0.9rem;
       backdrop-filter: blur(8px);
+    }
+
+    .top-links {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .top-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.95rem;
     }
 
     .grid {
@@ -109,10 +153,14 @@
       font-size: 1.1rem;
     }
 
+    .card h3 {
+      margin: 18px 0 8px;
+      font-size: 1rem;
+    }
+
     .subtle {
       color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
+      font-size: 0.95rem;
     }
 
     .form-grid {
@@ -251,9 +299,7 @@
       font-weight: 700;
     }
 
-    .stat strong {
-      font-size: 1rem;
-    }
+    .stat strong { font-size: 1rem; }
 
     .safe-banner {
       margin-top: 10px;
@@ -277,9 +323,7 @@
       line-height: 1.55;
     }
 
-    .muted-list {
-      color: var(--muted);
-    }
+    .muted-list { color: var(--muted); }
 
     .pill-grid {
       display: flex;
@@ -309,6 +353,36 @@
       height: 10px;
     }
 
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    details.article {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      padding: 12px 14px;
+    }
+
+    details.article summary {
+      cursor: pointer;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    details.article p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .faq-item {
+      margin-top: 10px;
+    }
+
     .footer-note {
       margin-top: 14px;
       color: var(--muted);
@@ -316,29 +390,104 @@
       line-height: 1.5;
     }
 
+    .footer {
+      margin-top: 18px;
+      padding: 16px 0 4px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    body.dark {
+      background:
+        radial-gradient(circle at top left, rgba(64, 120, 255, 0.14), transparent 30%),
+        radial-gradient(circle at top right, rgba(22, 190, 149, 0.12), transparent 28%),
+        linear-gradient(180deg, #07111f 0%, #0b1425 100%);
+      color: #e7eefc;
+    }
+
+    body.dark .card,
+    body.dark .top-links {
+      background: rgba(13, 21, 39, 0.92);
+      color: #e7eefc;
+      border-color: #26324a;
+    }
+
+    body.dark .card h2,
+    body.dark .card h3,
+    body.dark .match-title,
+    body.dark .stat strong,
+    body.dark summary,
+    body.dark .subtle,
+    body.dark .reason-list,
+    body.dark .pill,
+    body.dark label {
+      color: #e7eefc;
+    }
+
+    body.dark .stat,
+    body.dark details.article,
+    body.dark input,
+    body.dark select,
+    body.dark textarea,
+    body.dark .result-box {
+      background: #0f1b31;
+      color: #e7eefc;
+      border-color: #2a3751;
+    }
+
+    body.dark .secondary {
+      background: #18253f;
+      color: #e7eefc;
+      border-color: #2a3751;
+    }
+
+    body.dark .safe-banner {
+      background: #102241;
+      border-color: #27406f;
+    }
+
+    body.dark .pill {
+      background: #132038;
+      border-color: #2a3751;
+    }
+
+    body.dark .top-links a { color: #9dc0ff; }
+
+    body.dark .footer { color: #9ab0cf; }
+
     @media (max-width: 980px) {
       .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .form-grid, .small-grid, .article-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
       .wrap { width: min(100% - 14px, 1200px); }
       .hero, .card { border-radius: 18px; }
-      .form-grid, .small-grid { grid-template-columns: 1fr; }
       .controls { flex-direction: column; }
       button { width: 100%; }
+      .top-links { padding: 10px 12px; }
     }
   </style>
 </head>
-<body>
+<body id="top">
   <div class="wrap">
     <section class="hero">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;position:relative;z-index:1;">
+        <div style="width:56px;height:56px;border-radius:18px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2rem;letter-spacing:1px;box-shadow:0 10px 24px rgba(0,0,0,0.12);">EP</div>
+        <div>
+          <div style="font-size:0.86rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,0.82);">Elite Football Predictor</div>
+          <div style="font-size:0.92rem;color:rgba(255,255,255,0.78);">AI-powered football analytics</div>
+        </div>
+      </div>
       <h1>Elite Football Predictor</h1>
+      <p class="motto">Data over hype. Discipline over emotion. Precision over guesswork.</p>
       <p>
         Institutional-style football analysis engine for high-probability selections. It weighs form, xG, squad news,
         tactics, market movement, and risk filters to return only disciplined edges.
-      </p>
-      <p style="margin-top:12px;font-weight:700;color:#ffffff;max-width:760px;">
-        “Data over hype. Discipline over emotion. Precision over guesswork.”
       </p>
       <div class="badge-row">
         <div class="badge">Safe Prediction</div>
@@ -348,12 +497,18 @@
       </div>
     </section>
 
-    <nav style="margin-top:18px;background:rgba(255,255,255,0.92);border:1px solid var(--border);padding:12px 16px;border-radius:18px;box-shadow:var(--shadow);display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;">
-      <a href="#predictor" style="text-decoration:none;color:var(--accent);font-weight:800;">Predictor</a>
-      <a href="#about" style="text-decoration:none;color:var(--accent);font-weight:800;">About</a>
-      <a href="#privacy" style="text-decoration:none;color:var(--accent);font-weight:800;">Privacy Policy</a>
-      <a href="#terms" style="text-decoration:none;color:var(--accent);font-weight:800;">Terms</a>
-      <a href="#contact" style="text-decoration:none;color:var(--accent);font-weight:800;">Contact</a>
+    <nav class="top-links">
+      <button id="themeToggle" class="secondary" type="button" style="padding:10px 14px;border-radius:999px;font-weight:800;">Dark Mode</button>
+      <a href="#top">Home</a>
+      <a href="#predictor">Predictor</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#football-articles">Football Articles</a>
+      <a href="#faq">FAQ</a>
+      <a href="#about">About</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#terms">Terms</a>
+      <a href="#disclaimer">Disclaimer</a>
+      <a href="#contact">Contact</a>
     </nav>
 
     <div class="grid" id="predictor">
@@ -472,6 +627,212 @@
           </div>
         </div>
       </section>
+    </div>
+
+    <section class="card" id="how-it-works" style="margin-top:18px;">
+      <h2>How The Predictor Works</h2>
+      <p class="subtle">The engine blends statistical, tactical, and market inputs instead of relying on a single signal.</p>
+      <div class="pill-grid">
+        <div class="pill">Historical form</div>
+        <div class="pill">xG and xGA</div>
+        <div class="pill">Squad absences</div>
+        <div class="pill">Market movement</div>
+        <div class="pill">Tactical matchup</div>
+        <div class="pill">Risk filtering</div>
+      </div>
+      <h3>Decision steps</h3>
+      <ul class="reason-list">
+        <li>Estimate home, draw, and away probabilities using form, xG, and defensive strength.</li>
+        <li>Estimate expected goals for both teams.</li>
+        <li>Reject matches that do not show enough edge.</li>
+        <li>Prefer safer markets such as double chance, draw no bet, or under goals when appropriate.</li>
+        <li>Flag suspicious odds movement and public hype as warning signs.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="football-articles" style="margin-top:18px;">
+      <h2>Football Knowledge Articles</h2>
+      <p class="subtle">Long-form football analysis articles focused on probability, tactics, and disciplined decision-making.</p>
+
+      <details class="article" open>
+        <summary>What xG Really Means in Football Prediction</summary>
+        <p>
+          Expected Goals, commonly called xG, is one of the most useful metrics in modern football analysis because it measures the quality of chances created rather than simply counting goals. Many casual football fans focus only on final scorelines, but professional analysts often care more about the process behind those results. A team can score three goals from three low-quality shots and appear dominant, yet underlying numbers may show that performance was unsustainable. Over time, xG helps identify whether a team is genuinely strong or simply benefiting from temporary overperformance.
+          <br><br>
+          Each shot in football has a probability attached to it based on factors such as shooting angle, distance from goal, defensive pressure, type of assist, body position, and whether the chance came from open play or a set piece. A penalty usually carries a very high xG value because penalties are converted frequently, while speculative long-range efforts have very low xG values. By adding these probabilities together, analysts estimate how many goals a team should have scored based on chance quality.
+          <br><br>
+          This becomes powerful in football prediction because it helps identify hidden trends before bookmakers and casual bettors fully adjust. For example, a team that keeps winning despite poor xG numbers may eventually regress because the underlying process is weak. Conversely, a team creating strong xG numbers while losing matches may soon improve because their attacking structure remains effective.
+          <br><br>
+          xG also improves match-specific analysis. When comparing two teams, analysts look at attacking xG and defensive xGA together. If Team A creates high-quality chances while Team B allows many dangerous opportunities, the matchup may favor Team A heavily. However, strong football prediction models never rely on xG alone. Tactical style, injuries, fatigue, goalkeeper form, and market movement still matter.
+          <br><br>
+          Another advantage of xG is that it helps reduce emotional decision-making. Fans often overreact to dramatic scorelines, but xG provides a more stable framework for evaluating performance. A narrow defeat with strong xG numbers may actually indicate future value, while a lucky win with poor underlying metrics can warn of upcoming decline.
+          <br><br>
+          In modern football analytics, xG has become essential because it reveals deeper performance patterns that traditional statistics cannot fully capture. While no metric guarantees perfect predictions, xG remains one of the strongest tools for understanding sustainable attacking and defensive quality.
+        </p>
+      </details>
+
+      <details class="article">
+        <summary>How Bookmaker Traps and Public Betting Bias Influence Football Odds</summary>
+        <p>
+          Football betting markets are heavily influenced by public perception, emotional reactions, and media narratives. Many casual bettors believe bookmakers simply predict outcomes, but in reality bookmakers are also risk managers. Their goal is to balance exposure while maintaining profit margins. This creates situations where odds may not always reflect true football probability.
+          <br><br>
+          Public betting bias is especially visible with famous clubs, undefeated streaks, star players, and emotionally driven storylines. Teams with massive fan bases often receive inflated support even when underlying data is weak. Casual bettors may continue backing a popular team despite poor defensive numbers, injury concerns, or fixture congestion. When this happens, bookmakers may shorten odds because public money keeps flowing toward one side.
+          <br><br>
+          Professional analysts look for these distortions carefully. If a heavily backed favorite has weak xG numbers, unstable tactical structure, or major absences, short odds may represent poor value. In some cases bookmakers intentionally position markets to attract emotional betting activity. This is why disciplined prediction models avoid hype-driven selections.
+          <br><br>
+          Reverse line movement is another important concept. Sometimes odds move against the majority of public bets. For example, if most bettors support the home team but the odds drift toward the away side, this may suggest sharp money or respected professional action influencing the market. Analysts study these movements because professional syndicates often shape prices before the wider public notices.
+          <br><br>
+          Timing also matters. Odds can move rapidly after lineup announcements, injury updates, weather changes, or tactical news. Teams involved in European competitions may rotate heavily, reducing squad quality even if public perception remains strong. Smart football prediction systems constantly monitor whether market movement aligns with actual football data.
+          <br><br>
+          Bookmaker traps are not magical conspiracies. They are usually situations where public emotion overwhelms objective analysis. Markets influenced by hype, revenge narratives, derby emotion, or media excitement often become dangerous for undisciplined bettors.
+          <br><br>
+          Long-term football prediction success depends on understanding probability rather than chasing excitement. Professional analysts focus on identifying edges where the market price does not fully reflect the underlying football reality. That discipline is often more important than simply predicting the winner correctly.
+        </p>
+      </details>
+
+      <details class="article">
+        <summary>Why Tactical Matchups Matter More Than Team Reputation</summary>
+        <p>
+          Football matches are often decided by tactical interaction rather than reputation alone. Casual fans may assume stronger squads automatically dominate weaker teams, but tactical structure frequently changes how games unfold. A well-organized underdog can neutralize superior talent through shape, pressing, transitions, and defensive compactness.
+          <br><br>
+          Modern football prediction models therefore study tactical matchups carefully before estimating probabilities. High pressing systems, low defensive blocks, possession-heavy structures, and counterattacking styles all interact differently depending on the opponent. Some teams struggle badly against aggressive pressing, while others are comfortable absorbing pressure and attacking space behind the defense.
+          <br><br>
+          Defensive line height is one of the most important tactical variables. Teams playing with a high line can dominate territory but may become vulnerable to pace in transition. Opponents with fast forwards and direct passing may exploit these spaces repeatedly. Similarly, teams relying heavily on crosses may struggle against opponents with aerial dominance and physical center-backs.
+          <br><br>
+          Tactical flexibility also matters. Some managers adapt game plans based on the opponent, while others stick rigidly to one structure regardless of matchup. Predictable systems can become easier to exploit over time, especially when injuries reduce squad quality.
+          <br><br>
+          Midfield control is another major factor. Teams with strong ball progression and positional discipline often dictate tempo and territory. However, possession itself does not guarantee superiority. A possession-heavy side may still struggle to create dangerous chances if the opponent blocks central areas effectively.
+          <br><br>
+          Substitution impact should not be ignored either. Managers with strong benches and tactical adaptability often gain advantages late in matches. Fatigue changes games significantly, especially during fixture congestion periods where pressing intensity naturally drops.
+          <br><br>
+          Tactical analysis becomes even more valuable when combined with advanced metrics. A team may appear strong statistically, but certain tactical weaknesses can still create dangerous matchups. This is why elite football prediction models combine xG, squad analysis, and tactical structure instead of relying on raw numbers alone.
+          <br><br>
+          Ultimately, football prediction is strongest when it recognizes that styles make fights. Understanding how tactical systems interact often explains surprising results more accurately than team reputation or league position.
+        </p>
+      </details>
+
+      <details class="article">
+        <summary>Why Risk Management Is Essential in Football Prediction</summary>
+        <p>
+          One of the biggest differences between professional football analysts and casual bettors is risk management. Casual betting behavior often focuses on excitement, large accumulators, emotional loyalty, or chasing losses. Professional analysis, however, is built around probability, discipline, and long-term survival.
+          <br><br>
+          Football is naturally unpredictable because low-scoring sports contain high variance. A single red card, deflection, injury, or refereeing decision can completely change a match outcome. Because of this uncertainty, even excellent predictions lose sometimes. Risk management exists to protect against these inevitable swings.
+          <br><br>
+          One of the most important concepts in disciplined football analysis is rejecting weak matches. Many bettors feel pressured to predict every game, but elite models are selective. If confidence is low or data signals conflict with each other, the safest decision may be no bet. This prevents emotional overexposure and improves long-term consistency.
+          <br><br>
+          Market selection is also part of risk management. Straight match winners are not always the safest option. In balanced games, draw no bet or double chance may preserve value while reducing downside risk. Low-scoring leagues may favor under-goal markets instead of aggressive winner bets.
+          <br><br>
+          Probability weighting is another critical factor. A prediction with a 58 percent chance is very different from one with an 82 percent chance. Professional analysts therefore separate strong edges from speculative plays instead of treating every prediction equally.
+          <br><br>
+          Emotional control is equally important. Chasing losses after a bad result usually increases decision-making errors. Similarly, overconfidence after a winning streak can encourage reckless behavior. Structured bankroll management helps maintain discipline through both winning and losing periods.
+          <br><br>
+          Another overlooked aspect of football prediction is variance between leagues. Some leagues produce more stable patterns than others. Highly tactical leagues with disciplined defensive structures may generate more predictable goal trends, while chaotic leagues can become harder to model consistently.
+          <br><br>
+          Risk management ultimately transforms football prediction from entertainment into structured probability analysis. The objective is not to win every match prediction. The objective is to make decisions where the estimated probability consistently exceeds market expectations over time.
+          <br><br>
+          In professional football analytics, long-term discipline matters far more than short-term excitement. Sustainable decision-making is what separates institutional-grade analysis from emotional gambling behavior.
+        </p>
+      </details>
+    </section>
+
+    <section class="card" id="faq" style="margin-top:18px;">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <h3>Does this guarantee winnings?</h3>
+        <p class="subtle">No. Football always has uncertainty. The model only estimates probability and filters for stronger edges.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Why does it sometimes say NO SAFE EDGE FOUND?</h3>
+        <p class="subtle">Because disciplined analysis sometimes finds no clear advantage. That is better than forcing a weak pick.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can I use this on mobile?</h3>
+        <p class="subtle">Yes. The layout is responsive and built to work on phones, tablets, and desktop screens.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can this help with football research?</h3>
+        <p class="subtle">Yes. It is useful as a structured analysis tool for comparing form, xG, squad news, and betting market behavior.</p>
+      </div>
+    </section>
+
+    <section class="card" id="about" style="margin-top:18px;">
+      <h2>About Elite Football Predictor</h2>
+      <p class="subtle">
+        Elite Football Predictor is a football analytics platform designed to identify high-probability football outcomes using structured statistical weighting, tactical analysis, and disciplined market filtering.
+      </p>
+      <p class="subtle">
+        Instead of emotional predictions or fan-based opinions, the system evaluates multiple factors including expected goals (xG), recent form, squad stability, market movement, tactical matchups, defensive consistency, and bookmaker behavior.
+      </p>
+      <p class="subtle">
+        The goal is long-term decision quality through risk-controlled football analysis.
+      </p>
+    </section>
+
+    <section class="card" id="privacy" style="margin-top:18px;">
+      <h2>Privacy Policy</h2>
+      <p class="subtle">
+        Elite Football Predictor respects user privacy. This website does not collect sensitive personal information unless voluntarily submitted through contact communication.
+      </p>
+      <p class="subtle">
+        Cookies or analytics tools may be used to improve user experience, measure traffic, and optimize platform performance. Third-party services such as advertising providers may also use cookies in accordance with their own policies.
+      </p>
+      <p class="subtle">
+        By using this website, users agree to the collection of limited non-personal analytical data for service improvement.
+      </p>
+    </section>
+
+    <section class="card" id="terms" style="margin-top:18px;">
+      <h2>Terms & Conditions</h2>
+      <p class="subtle">
+        The information provided by Elite Football Predictor is for informational and educational purposes only.
+      </p>
+      <p class="subtle">
+        Predictions generated by this platform are statistical estimates and do not guarantee match outcomes or betting success. Users are responsible for their own decisions and financial actions.
+      </p>
+      <p class="subtle">
+        The platform may update prediction models, methodologies, or features at any time without prior notice.
+      </p>
+    </section>
+
+    <section class="card" id="disclaimer" style="margin-top:18px;">
+      <h2>Disclaimer</h2>
+      <p class="subtle">
+        Elite Football Predictor provides analytical football insights based on statistical models, historical patterns, market analysis, and tactical evaluation.
+      </p>
+      <p class="subtle">
+        All predictions, probabilities, and betting-related information are estimates only and should not be interpreted as guaranteed outcomes or financial advice.
+      </p>
+      <p class="subtle">
+        Users are fully responsible for their own betting decisions, financial activities, and risk management. Football outcomes can be influenced by unpredictable events including injuries, refereeing decisions, weather conditions, and match-day circumstances.
+      </p>
+      <p class="subtle">
+        By using this website, you acknowledge that Elite Football Predictor and its owners are not liable for losses, damages, or decisions made based on the information presented on the platform.
+      </p>
+    </section>
+
+    <section class="card" id="responsible-gambling" style="margin-top:18px;">
+      <h2>Responsible Gambling</h2>
+      <p class="subtle">
+        Football prediction tools should be used for analysis, not emotional chasing. Never bet money you cannot afford to lose.
+      </p>
+      <p class="subtle">
+        Set a clear budget, avoid chasing losses, and take breaks when betting stops being controlled. If gambling is causing harm, seek help from a qualified support service in your region.
+      </p>
+    </section>
+
+    <section class="card" id="contact" style="margin-top:18px;margin-bottom:20px;">
+      <h2>Contact</h2>
+      <p class="subtle">For business inquiries, feedback, partnerships, or technical support, contact:</p>
+      <div class="pill-grid" style="margin-bottom:12px;">
+        <div class="pill">Name: Nyasha</div>
+        <div class="pill">Email: usatonlinetools@gmail.com</div>
+        <div class="pill">Phone: +263719124681</div>
+      </div>
+      <p class="subtle">This page is designed as a single-page site for easier navigation and faster loading on mobile and desktop devices.</p>
+    </section>
+
+    <div class="footer">
+      © 2026 Elite Football Predictor. All rights reserved.
     </div>
   </div>
 
@@ -685,80 +1046,11 @@
 
     el("analyzeBtn").addEventListener("click", analyze);
     el("resetBtn").addEventListener("click", resetSample);
+    el("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      el("themeToggle").textContent = document.body.classList.contains("dark") ? "Light Mode" : "Dark Mode";
+    });
     analyze();
   </script>
-
-    <section class="card" id="about" style="margin-top:18px;">
-      <h2>About Elite Football Predictor</h2>
-      <p class="subtle">
-        Elite Football Predictor is a football analytics platform designed to identify high-probability football outcomes using structured statistical weighting, tactical analysis, and disciplined market filtering.
-      </p>
-      <p class="subtle">
-        Instead of emotional predictions or fan-based opinions, the system evaluates multiple factors including expected goals (xG), recent form, squad stability, market movement, tactical matchups, defensive consistency, and bookmaker behavior.
-      </p>
-      <p class="subtle">
-        The goal is long-term decision quality through risk-controlled football analysis.
-      </p>
-    </section>
-
-    <section class="card" id="privacy" style="margin-top:18px;">
-      <h2>Privacy Policy</h2>
-      <p class="subtle">
-        Elite Football Predictor respects user privacy. This website does not collect sensitive personal information unless voluntarily submitted through contact communication.
-      </p>
-      <p class="subtle">
-        Cookies or analytics tools may be used to improve user experience, measure traffic, and optimize platform performance. Third-party services such as advertising providers may also use cookies in accordance with their own policies.
-      </p>
-      <p class="subtle">
-        By using this website, users agree to the collection of limited non-personal analytical data for service improvement.
-      </p>
-    </section>
-
-    <section class="card" id="terms" style="margin-top:18px;">
-      <h2>Terms & Conditions</h2>
-      <p class="subtle">
-        The information provided by Elite Football Predictor is for informational and educational purposes only.
-      </p>
-      <p class="subtle">
-        Predictions generated by this platform are statistical estimates and do not guarantee match outcomes or betting success. Users are responsible for their own decisions and financial actions.
-      </p>
-      <p class="subtle">
-        The platform may update prediction models, methodologies, or features at any time without prior notice.
-      </p>
-    </section>
-
-    <section class="card" id="disclaimer" style="margin-top:18px;">
-      <h2>Disclaimer</h2>
-      <p class="subtle">
-        Elite Football Predictor provides analytical football insights based on statistical models, historical patterns, market analysis, and tactical evaluation.
-      </p>
-      <p class="subtle">
-        All predictions, probabilities, and betting-related information are estimates only and should not be interpreted as guaranteed outcomes or financial advice.
-      </p>
-      <p class="subtle">
-        Users are fully responsible for their own betting decisions, financial activities, and risk management. Football outcomes can be influenced by unpredictable events including injuries, refereeing decisions, weather conditions, and match-day circumstances.
-      </p>
-      <p class="subtle">
-        By using this website, you acknowledge that Elite Football Predictor and its owners are not liable for losses, damages, or decisions made based on the information presented on the platform.
-      </p>
-    </section>
-
-    <section class="card" id="contact" style="margin-top:18px;margin-bottom:20px;">
-      <h2>Contact</h2>
-      <p class="subtle">
-        For business inquiries, feedback, partnerships, or technical support, contact:
-      </p>
-      <div class="pill-grid" style="margin-bottom:12px;">
-        <div class="pill">Name: Nyasha</div>
-        <div class="pill">Email: usatonlinetools@gmail.com</div>
-        <div class="pill">Phone: +263719124681</div>
-      </div>
-      <div class="pill-grid">
-        <div class="pill">Football Analytics</div>
-        <div class="pill">AI Prediction Engine</div>
-        <div class="pill">Risk-Controlled Analysis</div>
-        
-      </div>
-    </section>
 </body>
 </html>
