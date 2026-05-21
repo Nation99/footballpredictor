@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Football Predictor | AI Football Prediction Engine</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-strong: #ffffff;
+      --text: #152033;
+      --muted: #5e6b82;
+      --border: #dce3ee;
+      --accent: #173b8c;
+      --accent-2: #0f9d7a;
+      --warn: #b84b22;
+      --good: #18794e;
+      --shadow: 0 18px 50px rgba(19, 39, 73, 0.12);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(23, 59, 140, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(15, 157, 122, 0.12), transparent 28%),
+        linear-gradient(180deg, #eef3fb 0%, #f8fbff 100%);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 18px 0 36px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #132a55 0%, #173b8c 45%, #0f9d7a 100%);
+      color: white;
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at right top, rgba(255,255,255,0.18), transparent 28%);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 3vw, 2.6rem);
+      letter-spacing: 0.2px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,0.88);
+      max-width: 820px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-strong);
+      border-radius: 14px;
+      padding: 12px 13px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(23, 59, 140, 0.5);
+      box-shadow: 0 0 0 4px rgba(23, 59, 140, 0.08);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #285fe2 100%);
+      color: white;
+      box-shadow: 0 14px 25px rgba(23, 59, 140, 0.22);
+    }
+
+    .secondary {
+      background: #eef3fb;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .result-top {
+      display: grid;
+      gap: 12px;
+    }
+
+    .result-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status.low { color: var(--good); background: rgba(24, 121, 78, 0.10); }
+    .status.medium { color: #9a5b00; background: rgba(154, 91, 0, 0.10); }
+    .status.high { color: var(--warn); background: rgba(184, 75, 34, 0.10); }
+
+    .match-title {
+      font-size: 1.25rem;
+      margin: 8px 0 4px;
+      font-weight: 900;
+    }
+
+    .small-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .stat strong {
+      font-size: 1rem;
+    }
+
+    .safe-banner {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f0f7ff;
+      border: 1px solid #d6e6ff;
+      font-weight: 800;
+    }
+
+    .section-title {
+      margin: 18px 0 10px;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    ul.reason-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .muted-list {
+      color: var(--muted);
+    }
+
+    .pill-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .range-row {
+      display: grid;
+      grid-template-columns: 1fr 70px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      height: 10px;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 14px, 1200px); }
+      .hero, .card { border-radius: 18px; }
+      .form-grid, .small-grid { grid-template-columns: 1fr; }
+      .controls { flex-direction: column; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Elite Football Predictor</h1>
+      <p>
+        Institutional-style football analysis engine for high-probability selections. It weighs form, xG, squad news,
+        tactics, market movement, and risk filters to return only disciplined edges.
+      </p>
+      <p style="margin-top:12px;font-weight:700;color:#ffffff;max-width:760px;">
+        “Data over hype. Discipline over emotion. Precision over guesswork.”
+      </p>
+      <div class="badge-row">
+        <div class="badge">Safe Prediction</div>
+        <div class="badge">Medium-Risk Prediction</div>
+        <div class="badge">High-Value Prediction</div>
+        <div class="badge">NO SAFE EDGE FOUND</div>
+      </div>
+    </section>
+
+    <nav style="margin-top:18px;background:rgba(255,255,255,0.92);border:1px solid var(--border);padding:12px 16px;border-radius:18px;box-shadow:var(--shadow);display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;">
+      <a href="#predictor" style="text-decoration:none;color:var(--accent);font-weight:800;">Predictor</a>
+      <a href="#about" style="text-decoration:none;color:var(--accent);font-weight:800;">About</a>
+      <a href="#privacy" style="text-decoration:none;color:var(--accent);font-weight:800;">Privacy Policy</a>
+      <a href="#terms" style="text-decoration:none;color:var(--accent);font-weight:800;">Terms</a>
+      <a href="#contact" style="text-decoration:none;color:var(--accent);font-weight:800;">Contact</a>
+    </nav>
+
+    <div class="grid" id="predictor">
+      <section class="card">
+        <h2>Match Inputs</h2>
+        <p class="subtle">Enter match data. The engine will score probability, expected goals, safest market, and warning signs.</p>
+
+        <div class="form-grid">
+          <div class="field full">
+            <label>Match</label>
+            <input id="matchName" type="text" value="Team A vs Team B" />
+          </div>
+
+          <div class="field">
+            <label>Home Team</label>
+            <input id="homeTeam" type="text" value="Team A" />
+          </div>
+          <div class="field">
+            <label>Away Team</label>
+            <input id="awayTeam" type="text" value="Team B" />
+          </div>
+
+          <div class="field">
+            <label>Home Form Strength (0-10)</label>
+            <div class="range-row">
+              <input id="homeForm" type="range" min="0" max="10" value="7" />
+              <strong id="homeFormVal">7</strong>
+            </div>
+          </div>
+          <div class="field">
+            <label>Away Form Strength (0-10)</label>
+            <div class="range-row">
+              <input id="awayForm" type="range" min="0" max="10" value="5" />
+              <strong id="awayFormVal">5</strong>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Home xG</label>
+            <input id="homeXG" type="number" step="0.1" value="1.8" />
+          </div>
+          <div class="field">
+            <label>Away xG</label>
+            <input id="awayXG" type="number" step="0.1" value="1.1" />
+          </div>
+
+          <div class="field">
+            <label>Home xGA</label>
+            <input id="homeXGA" type="number" step="0.1" value="0.9" />
+          </div>
+          <div class="field">
+            <label>Away xGA</label>
+            <input id="awayXGA" type="number" step="0.1" value="1.4" />
+          </div>
+
+          <div class="field">
+            <label>Injuries / Suspensions (Home)</label>
+            <input id="homeAbsences" type="number" min="0" step="1" value="1" />
+          </div>
+          <div class="field">
+            <label>Injuries / Suspensions (Away)</label>
+            <input id="awayAbsences" type="number" min="0" step="1" value="3" />
+          </div>
+
+          <div class="field">
+            <label>Market Movement (Home Edge / Trap)</label>
+            <select id="marketMove">
+              <option value="home">Home side shortening</option>
+              <option value="away">Away side shortening</option>
+              <option value="neutral" selected>Neutral / stable</option>
+              <option value="trap">Public hype / suspicious trap</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Public Betting Pressure</label>
+            <select id="publicBias">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Tactical Stability (Home / Away)</label>
+            <input id="tactical" type="text" value="Home stable, away inconsistent" />
+          </div>
+          <div class="field">
+            <label>Environmental Notes</label>
+            <input id="environment" type="text" value="Normal weather, no major travel issue" />
+          </div>
+
+          <div class="field full">
+            <label>Extra Notes</label>
+            <textarea id="notes">Use this for derby pressure, fixture congestion, keeper form, referee tendencies, or anything else that matters.</textarea>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="primary" id="analyzeBtn">Analyze Match</button>
+          <button class="secondary" id="resetBtn">Reset Sample</button>
+        </div>
+
+        <p class="footer-note">
+          This tool is designed to filter for strong edges only. When the combined score is weak or market signals are messy,
+          it will reject the match instead of forcing a bet.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Prediction Output</h2>
+        <div id="result" class="result-top">
+          <div class="result-box">
+            <div class="status low"><span class="dot"></span>Ready</div>
+            <div class="match-title">Team A vs Team B</div>
+            <div class="subtle">Run analysis to generate the prediction report.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    const inputs = ["homeForm", "awayForm", "homeXG", "awayXG", "homeXGA", "awayXGA", "homeAbsences", "awayAbsences"];
+    inputs.forEach((id) => {
+      el(id).addEventListener("input", () => {
+        const label = id + "Val";
+        if (el(label)) el(label).textContent = el(id).value;
+      });
+    });
+
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function round1(n) {
+      return Math.round(n * 10) / 10;
+    }
+
+    function normalize(home, draw, away) {
+      const total = home + draw + away;
+      return {
+        home: (home / total) * 100,
+        draw: (draw / total) * 100,
+        away: (away / total) * 100,
+      };
+    }
+
+    function safeText(value, fallback = "NO SAFE EDGE FOUND") {
+      return value || fallback;
+    }
+
+    function analyze() {
+      const homeTeam = el("homeTeam").value.trim() || "Team A";
+      const awayTeam = el("awayTeam").value.trim() || "Team B";
+      const match = `${homeTeam} vs ${awayTeam}`;
+
+      const homeForm = +el("homeForm").value;
+      const awayForm = +el("awayForm").value;
+      const homeXG = parseFloat(el("homeXG").value) || 0;
+      const awayXG = parseFloat(el("awayXG").value) || 0;
+      const homeXGA = parseFloat(el("homeXGA").value) || 0;
+      const awayXGA = parseFloat(el("awayXGA").value) || 0;
+      const homeAbs = +el("homeAbsences").value;
+      const awayAbs = +el("awayAbsences").value;
+      const marketMove = el("marketMove").value;
+      const publicBias = el("publicBias").value;
+      const tactical = el("tactical").value.trim();
+      const environment = el("environment").value.trim();
+      const notes = el("notes").value.trim();
+
+      const formEdge = (homeForm - awayForm) * 4.2;
+      const xgEdge = (homeXG - awayXG) * 9.5;
+      const defenseEdge = (awayXGA - homeXGA) * 7.5;
+      const absEdge = (awayAbs - homeAbs) * 2.0;
+
+      let marketEdge = 0;
+      let trapPenalty = 0;
+      if (marketMove === "home") marketEdge = 5.5;
+      if (marketMove === "away") marketEdge = -5.5;
+      if (marketMove === "trap") trapPenalty = 8;
+      if (publicBias === "high") trapPenalty += 2.5;
+      if (publicBias === "medium") trapPenalty += 1;
+
+      const base = 50;
+      let homeScore = base + formEdge + xgEdge + defenseEdge + absEdge + marketEdge - trapPenalty;
+      let awayScore = 100 - homeScore;
+
+      const drawFactor = 18 - Math.abs(homeXG - awayXG) * 5 + Math.max(0, 6 - Math.abs(homeForm - awayForm)) * 1.1;
+      const drawScore = clamp(drawFactor, 6, 24);
+
+      let probs = normalize(clamp(homeScore, 10, 80), drawScore, clamp(awayScore, 10, 80));
+
+      const goalBase = (homeXG + awayXG) / 2;
+      let totalGoals = clamp(goalBase + (homeForm + awayForm - 10) * 0.07 - (homeAbs + awayAbs) * 0.03, 1.2, 4.2);
+      const homeExpectedGoals = clamp(homeXG + (homeForm - awayForm) * 0.05 + (awayXGA - homeXGA) * 0.08, 0.2, 3.6);
+      const awayExpectedGoals = clamp(awayXG + (awayForm - homeForm) * 0.05 + (homeXGA - awayXGA) * 0.08, 0.2, 3.6);
+
+      const maxProb = Math.max(probs.home, probs.draw, probs.away);
+      const secondProb = [probs.home, probs.draw, probs.away].sort((a, b) => b - a)[1];
+      const edge = maxProb - secondProb;
+      const confidence = clamp(maxProb + edge * 0.7 - trapPenalty * 0.6, 0, 96);
+
+      let outcome = "Draw";
+      let risk = "High";
+      let safestBet = "NO SAFE EDGE FOUND";
+      let valueBet = "NO SAFE EDGE FOUND";
+      let keyReasons = [];
+      let warningSigns = [];
+
+      const strongHome = probs.home >= probs.away && probs.home >= probs.draw;
+      const strongAway = probs.away > probs.home && probs.away >= probs.draw;
+      const strongDraw = probs.draw > 32 && Math.abs(homeXG - awayXG) < 0.35;
+
+      if (confidence < 60 || edge < 6 || marketMove === "trap") {
+        outcome = "NO SAFE EDGE FOUND";
+        risk = "High";
+        safestBet = "NO SAFE EDGE FOUND";
+        valueBet = "NO SAFE EDGE FOUND";
+      } else {
+        if (strongHome) outcome = "Home Win";
+        else if (strongAway) outcome = "Away Win";
+        else if (strongDraw) outcome = "Draw";
+
+        if (confidence >= 80) risk = "Low";
+        else if (confidence >= 70) risk = "Medium";
+        else risk = "High";
+
+        if (confidence >= 80 && outcome === "Home Win") safestBet = `Home Win / Draw No Bet on ${homeTeam}`;
+        else if (confidence >= 80 && outcome === "Away Win") safestBet = `Away Win / Draw No Bet on ${awayTeam}`;
+        else if (confidence >= 72 && Math.max(probs.home, probs.away) > 45) safestBet = "Double Chance";
+        else if (totalGoals <= 2.8) safestBet = "Under 3.5 Goals";
+        else safestBet = "Under 4.5 Goals";
+
+        if (probs.home > probs.away && homeXG > awayXG && marketMove !== "trap") valueBet = `Home Win or Home DNB`;
+        else if (probs.away > probs.home && awayXG > homeXG && marketMove !== "trap") valueBet = `Away Win or Away DNB`;
+        else if (totalGoals <= 2.8) valueBet = "Under 3.5 Goals";
+        else valueBet = "BTTS Yes";
+      }
+
+      if (homeForm >= awayForm) keyReasons.push(`${homeTeam} has stronger recent form.`);
+      if (homeXG >= awayXG) keyReasons.push(`${homeTeam} projects the better attacking output.`);
+      if (awayAbs > homeAbs) keyReasons.push(`${awayTeam} carries the heavier squad disruption.`);
+      if (marketMove === "home") keyReasons.push("Market movement supports the home side.");
+      if (Math.abs(homeXG - awayXG) < 0.3) keyReasons.push("Projected goal difference is narrow, so draw protection matters.");
+      if (notes.length > 0) keyReasons.push("Additional context was included in the filter.");
+
+      if (marketMove === "trap") warningSigns.push("Suspicious odds movement / possible bookmaker trap.");
+      if (publicBias === "high") warningSigns.push("Heavy public bias may be inflating the favorite.");
+      if (homeAbs + awayAbs >= 5) warningSigns.push("Significant squad absences may distort the edge.");
+      if (confidence < 70) warningSigns.push("Confidence is not high enough for an aggressive play.");
+      if (Math.abs(homeXG - awayXG) < 0.2) warningSigns.push("xG gap is too thin for a clean winner bet.");
+      if (!warningSigns.length) warningSigns.push("No major red flags detected from the supplied data.");
+
+      const resultHTML = `
+        <div class="result-box">
+          <div class="status ${risk.toLowerCase()}"><span class="dot"></span>${risk} Risk</div>
+          <div class="match-title">${match}</div>
+          <div class="subtle">Predicted Outcome</div>
+          <div style="font-size:1.25rem;font-weight:900;margin-top:4px;">${outcome}</div>
+          <div class="small-grid">
+            <div class="stat"><span>Confidence Level</span><strong>${round1(confidence)}%</strong></div>
+            <div class="stat"><span>Safest Bet</span><strong>${safeText(safestBet)}</strong></div>
+            <div class="stat"><span>Value Bet</span><strong>${safeText(valueBet)}</strong></div>
+          </div>
+        </div>
+
+        <div class="result-box">
+          <div class="section-title">Probability Breakdown</div>
+          <div class="pill-grid">
+            <div class="pill">Home Win: ${round1(probs.home)}%</div>
+            <div class="pill">Draw: ${round1(probs.draw)}%</div>
+            <div class="pill">Away Win: ${round1(probs.away)}%</div>
+          </div>
+
+          <div class="section-title">Expected Goals</div>
+          <div class="pill-grid">
+            <div class="pill">${homeTeam} xG: ${round1(homeExpectedGoals)}</div>
+            <div class="pill">${awayTeam} xG: ${round1(awayExpectedGoals)}</div>
+            <div class="pill">Projected Total: ${round1(totalGoals)}</div>
+          </div>
+
+          <div class="section-title">Key Reasons</div>
+          <ul class="reason-list">${keyReasons.slice(0, 3).map(r => `<li>${r}</li>`).join("") || "<li>NO SAFE EDGE FOUND</li>"}</ul>
+
+          <div class="section-title">Warning Signs</div>
+          <ul class="reason-list muted-list">${warningSigns.slice(0, 4).map(r => `<li>${r}</li>`).join("")}</ul>
+        </div>
+
+        <div class="result-box">
+          <div class="section-title">Decision Filter Summary</div>
+          <div class="pill-grid">
+            <div class="pill">Market: ${marketMove}</div>
+            <div class="pill">Public Bias: ${publicBias}</div>
+            <div class="pill">Tactical: ${tactical || "—"}</div>
+            <div class="pill">Environment: ${environment || "—"}</div>
+          </div>
+          <div class="safe-banner">${outcome === "NO SAFE EDGE FOUND" ? "NO SAFE EDGE FOUND" : `Filtered outcome: ${outcome} with disciplined risk control.`}</div>
+        </div>
+      `;
+
+      el("result").innerHTML = resultHTML;
+    }
+
+    function resetSample() {
+      el("matchName").value = "Team A vs Team B";
+      el("homeTeam").value = "Team A";
+      el("awayTeam").value = "Team B";
+      el("homeForm").value = 7;
+      el("awayForm").value = 5;
+      el("homeXG").value = 1.8;
+      el("awayXG").value = 1.1;
+      el("homeXGA").value = 0.9;
+      el("awayXGA").value = 1.4;
+      el("homeAbsences").value = 1;
+      el("awayAbsences").value = 3;
+      el("marketMove").value = "neutral";
+      el("publicBias").value = "medium";
+      el("tactical").value = "Home stable, away inconsistent";
+      el("environment").value = "Normal weather, no major travel issue";
+      el("notes").value = "Use this for derby pressure, fixture congestion, keeper form, referee tendencies, or anything else that matters.";
+      inputs.forEach((id) => {
+        const label = id + "Val";
+        if (el(label)) el(label).textContent = el(id).value;
+      });
+      analyze();
+    }
+
+    el("analyzeBtn").addEventListener("click", analyze);
+    el("resetBtn").addEventListener("click", resetSample);
+    analyze();
+  </script>
+
+    <section class="card" id="about" style="margin-top:18px;">
+      <h2>About Elite Football Predictor</h2>
+      <p class="subtle">
+        Elite Football Predictor is a football analytics platform designed to identify high-probability football outcomes using structured statistical weighting, tactical analysis, and disciplined market filtering.
+      </p>
+      <p class="subtle">
+        Instead of emotional predictions or fan-based opinions, the system evaluates multiple factors including expected goals (xG), recent form, squad stability, market movement, tactical matchups, defensive consistency, and bookmaker behavior.
+      </p>
+      <p class="subtle">
+        The goal is long-term decision quality through risk-controlled football analysis.
+      </p>
+    </section>
+
+    <section class="card" id="privacy" style="margin-top:18px;">
+      <h2>Privacy Policy</h2>
+      <p class="subtle">
+        Elite Football Predictor respects user privacy. This website does not collect sensitive personal information unless voluntarily submitted through contact communication.
+      </p>
+      <p class="subtle">
+        Cookies or analytics tools may be used to improve user experience, measure traffic, and optimize platform performance. Third-party services such as advertising providers may also use cookies in accordance with their own policies.
+      </p>
+      <p class="subtle">
+        By using this website, users agree to the collection of limited non-personal analytical data for service improvement.
+      </p>
+    </section>
+
+    <section class="card" id="terms" style="margin-top:18px;">
+      <h2>Terms & Conditions</h2>
+      <p class="subtle">
+        The information provided by Elite Football Predictor is for informational and educational purposes only.
+      </p>
+      <p class="subtle">
+        Predictions generated by this platform are statistical estimates and do not guarantee match outcomes or betting success. Users are responsible for their own decisions and financial actions.
+      </p>
+      <p class="subtle">
+        The platform may update prediction models, methodologies, or features at any time without prior notice.
+      </p>
+    </section>
+
+    <section class="card" id="disclaimer" style="margin-top:18px;">
+      <h2>Disclaimer</h2>
+      <p class="subtle">
+        Elite Football Predictor provides analytical football insights based on statistical models, historical patterns, market analysis, and tactical evaluation.
+      </p>
+      <p class="subtle">
+        All predictions, probabilities, and betting-related information are estimates only and should not be interpreted as guaranteed outcomes or financial advice.
+      </p>
+      <p class="subtle">
+        Users are fully responsible for their own betting decisions, financial activities, and risk management. Football outcomes can be influenced by unpredictable events including injuries, refereeing decisions, weather conditions, and match-day circumstances.
+      </p>
+      <p class="subtle">
+        By using this website, you acknowledge that Elite Football Predictor and its owners are not liable for losses, damages, or decisions made based on the information presented on the platform.
+      </p>
+    </section>
+
+    <section class="card" id="contact" style="margin-top:18px;margin-bottom:20px;">
+      <h2>Contact</h2>
+      <p class="subtle">
+        For business inquiries, feedback, partnerships, or technical support, contact:
+      </p>
+      <div class="pill-grid" style="margin-bottom:12px;">
+        <div class="pill">Name: Nyasha</div>
+        <div class="pill">Email: usatonlinetools@gmail.com</div>
+        <div class="pill">Phone: +263719124681</div>
+      </div>
+      <div class="pill-grid">
+        <div class="pill">Football Analytics</div>
+        <div class="pill">AI Prediction Engine</div>
+        <div class="pill">Risk-Controlled Analysis</div>
+        
+      </div>
+    </section>
+</body>
+</html>
